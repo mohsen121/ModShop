@@ -1,0 +1,110 @@
+﻿@page "/"
+@using ModShop.RazorPages.ViewComponents;
+@model ModShop.RazorPages.Pages.Home.HomePageModel
+@{
+}
+
+@section Slider{
+    <div id="home">
+        <!-- container -->
+        <div class="container">
+            <!-- home wrap -->
+            <div class="home-wrap">
+                <!-- home slick -->
+                <div id="home-slick">
+                    <!-- banner -->
+                    @if (Model.Sliders != null && Model.Sliders.Any())
+                    {
+                        @foreach (var s in Model.Sliders)
+                        {
+                            <div class="banner banner-1">
+                                <img src="@s.Image" alt="">
+                                <div class="banner-caption text-center">
+                                    @Html.Raw(s.HtmlText)
+                                </div>
+                            </div>
+                        }
+
+                    }
+
+                    <!-- /banner -->
+                </div>
+                <!-- /home slick -->
+            </div>
+            <!-- /home wrap -->
+        </div>
+        <!-- /container -->
+    </div>
+}
+
+
+<!-- /section -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+
+        <!-- row -->
+        <div class="row">
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="title">جدید ترین ها</h2>
+                    <div class="pull-left">
+                        <div class="product-slick-dots-2 custom-dots">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- section title -->
+            <!-- Product Slick -->
+            <div class="col-md-12 col-sm-6 col-xs-6">
+                <div class="row">
+                    <div id="product-slick-2" class="product-slick">
+                        @(await Component.InvokeAsync<ModShop.RazorPages.ViewComponents.ProductListViewComponent>(new ModShop.RazorPages.ViewComponents.ProductListViewComponent.InputModel{ Count = 5, ListType = ProductListViewComponent.ListType.Newest }))
+
+                    </div>
+                </div>
+            </div>
+            <!-- /Product Slick -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+<!-- section -->
+<!-- /section -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="title">جدیدترین محصولات</h2>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<ModShop.RazorPages.ViewComponents.ProductListViewComponent>(new ModShop.RazorPages.ViewComponents.ProductListViewComponent.InputModel{ }))
+
+        </div>
+        <!-- /row -->
+        <!-- row -->
+        <!-- /row -->
+        <!-- row -->
+        <div class="row">
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="title">محصولات پر فروش</h2>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<ModShop.RazorPages.ViewComponents.ProductListViewComponent>(new ModShop.RazorPages.ViewComponents.ProductListViewComponent.InputModel{ Count = 4, ListType = ProductListViewComponent.ListType.TopSale  }))
+        </div>
+
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+

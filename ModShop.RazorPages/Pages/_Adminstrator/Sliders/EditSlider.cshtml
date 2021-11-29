@@ -1,0 +1,115 @@
+﻿@page "/Adminstrator/Sliders/Edit/{id}"
+@model ModShop.RazorPages.Pages._Adminstrator.Sliders.EditSliderModel
+@{
+}
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">
+            تعریف اسلایدر جدید
+        </h3>
+
+    </div>
+
+    <form class="form" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            <input type="hidden" asp-for="Command.Entity.Id" />
+            <input type="hidden" asp-for="Command.Entity.Created" />
+            <input type="hidden" value="@Model.Command.Entity.Image" asp-for="OldImage" />
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>ترتیب:</label>
+                    <input type="number" value="0" asp-for="Command.Entity.Order" class="form-control" placeholder="ترتیب را وارد کنید">
+                    <span class="form-text text-muted">ترتیب را وارد کنید</span>
+                </div>
+                <div class="col-lg-6">
+                    <label class="col-xl-3 col-lg-3 col-form-label text-right">تصویر اسلایدر</label>
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                    <div class="image-input image-input-empty image-input-outline" id="pro_image" style="background-image: url(@Model.Command.Entity.Image)">
+                        <div class="image-input-wrapper"></div>
+
+                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="تغییر تصویر">
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input required type="file" asp-for="Image" accept=".png, .jpg, .jpeg" />
+
+                            <input type="hidden" name="profile_avatar_remove" />
+                        </label>
+
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="لغو تصویر">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="حذف تصویر">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>محتوای html:</label>
+                    <textarea dir="ltr" class="form-control" asp-for="Command.Entity.HtmlText"></textarea>
+                    <span class="form-text text-muted">محتوای html دلخواه برای مثال لینک یا متن اضافه کنید</span>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-primary mr-2">ذخیره</button>
+                    <a href="/Adminstrator/Sliders" class="btn btn-secondary">لغو</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script src="~/assets/plugins/custom/ckeditor/ckeditor.js"></script>
+    <script>
+        $(document).ready(function () {
+            var image = new KTImageInput('pro_image');
+
+            image.on('cancel', function (imageInput) {
+                swal.fire({
+                    title: 'تصویر با موفقیت لغو شد.',
+                    type: 'success',
+                    buttonsStyling: false,
+                    confirmButtonText: 'عالی!',
+                    confirmButtonClass: 'btn btn-primary font-weight-bold'
+                });
+            });
+
+            image.on('change', function (imageInput) {
+                console.log(imageInput);
+                swal.fire({
+                    title: 'تصویر با موفقیت تغییر کرد',
+                    type: 'success',
+                    buttonsStyling: false,
+                    confirmButtonText: 'عالی!',
+                    confirmButtonClass: 'btn btn-primary font-weight-bold'
+                });
+            });
+
+            image.on('remove', function (imageInput) {
+                swal.fire({
+                    title: 'تصویر با موفقیت حذف شد.',
+                    type: 'error',
+                    buttonsStyling: false,
+                    confirmButtonText: 'فهمیدم!',
+                    confirmButtonClass: 'btn btn-primary font-weight-bold'
+                });
+            });
+
+            $(document).submit(function (e) {
+                $('#Command.Entity.Image').val($('.image-input-wrapper').html());
+            });
+            //CKEDITOR.replace('Command.Entity.HtmlText');
+        });
+
+    </script>
+}

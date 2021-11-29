@@ -1,0 +1,191 @@
+﻿@page "/Product/{id}"
+@model ModShop.RazorPages.Pages.Home.ProductModel
+@{
+}
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <form id="product-form" method="get">
+                <input type="hidden" asp-for="Input.SelectedSizeId" />
+                <input type="hidden" asp-for="Input.SelectedColorId" />
+            </form>
+            <!--  Product Details -->
+            <div class="product product-details clearfix">
+                <div class="col-md-6">
+                    <div id="product-main-view">
+                        <div class="product-view">
+                            <img src="@Model.Dto.Parent.Image" alt="@Model.Dto.Parent.Title">
+                        </div>
+
+                        @if (Model.Dto.Children != null)
+                        {
+                            @foreach (var p in Model.Dto.Children)
+                            {
+                                <div class="product-view">
+                                    <img src="@p.Image" alt="@p.Title">
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <div id="product-view">
+                        <div class="product-view">
+                            <img src="@Model.Dto.Parent.Image" alt="@Model.Dto.Parent.Title">
+                        </div>
+                        @if (Model.Dto.Children != null)
+                        {
+                            @foreach (var p in Model.Dto.Children)
+                            {
+                                <div class="product-view">
+                                    <img src="@p.Image" alt="@p.Title">
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="product-body">
+                        <div class="product-label">
+                            @if (DateTime.Today - Model.Dto.Selected.Created.Date <= TimeSpan.FromDays(7))
+                            {
+                                <span>جدید</span>
+                            }
+                            @if (Model.Dto.Selected.Discount > 0)
+                            {
+                                <span class="sale">@Math.Floor((Model.Dto.Selected.Discount) / Model.Dto.Selected.Price * 100)%-</span>
+                            }
+                        </div>
+                        <h2 class="product-name">@Model.Dto.Parent.Title</h2>
+                        @if (Model.Dto.Selected.Discount > 0)
+                        {
+
+                            <h3 class="product-price">@(Model.Dto.Selected.Price - Model.Dto.Selected.Discount) تومان <del class="product-old-price">@Model.Dto.Selected.Price تومان</del></h3>
+                        }
+                        else
+                        {
+                            <h3 class="product-price">@Model.Dto.Selected.Price تومان</h3>
+                        }
+                        <div>
+                            <div class="product-rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o empty"></i>
+                            </div>
+
+                        </div>
+                        <p><strong>برند:</strong> @Model.Dto.Selected.Brand.Title</p>
+                        <p><strong>دسته بندی:</strong>@Model.Dto.Selected.Category.Title</p>
+                        <div class="product-options">
+                            <ul class="size-option">
+                                <li><span class="text-uppercase">اندازه:</span></li>
+                                @if (Model.Dto.ExistingSizes != null)
+                                {
+                                    @foreach (var s in Model.Dto.ExistingSizes)
+                                    {
+                                        <li class="@(s.Id == Model.Dto.Selected.SizeId ? "selected" : null)">
+                                            <a class="productSizeChange" data-size-id="@s.Id">@s.Title - @s.Code</a>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                            <ul class="color-option">
+                                <li><span class="text-uppercase">رنگ:</span></li>
+                                @if (Model.Dto.ExistingSizes != null)
+                                {
+                                    @foreach (var c in Model.Dto.ExistingColors)
+                                    {
+                                        <li class="@(c.Id == Model.Dto.Selected.ColorId ? "selected" : null)">
+                                            <a class="productColorChange" data-color-id="@c.Id" style="background-color:@($"#{c.HexCode}");"></a>
+                                        </li>
+
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+
+                        <div class="product-btns">
+                            @if (Model.Dto.IsInStock && Model.User.Identity.IsAuthenticated)
+                            {
+                                <div class="qty-input">
+                                    <span class="text-uppercase">تعداد: </span>
+                                    <input value="1" min="1" max="@Model.Dto.Selected.Quantity" class="input" id="cartCount" type="number">
+                                </div>
+                                <button class="primary-btn add-to-cart productAddCart" data-productid="@Model.Dto.Selected.Id"><i class="fa fa-shopping-cart"></i> افزودن به سبد</button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="product-tab">
+                        <ul class="tab-nav">
+                            <li class="active"><a data-toggle="tab" href="#tab1">توضیحات</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab1" class="tab-pane fade in active">
+                                <p>@Model.Dto.Parent.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /Product Details -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.productAddCart').on('click', function (e) {
+                var id = $(this).data('productid');
+                var count = $('#cartCount').val();
+
+                if (count <= 0)
+                    count = 1;
+
+                if (!id)
+                    return;
+
+                addToCart(id, count);
+            });
+
+            $('.productSizeChange').on('click', function (e) {
+                var sizeId = $(this).data('size-id');
+                if (!sizeId) {
+                    console.log('fs');
+                    return;
+                }
+
+                $('#Input_SelectedSizeId').val(sizeId);
+
+                $('#product-form').submit();
+            });
+
+            $('.productColorChange').on('click', function (e) {
+                var colorId = $(this).data('color-id');
+                if (!colorId) {
+                    console.log('fc');
+                    return;
+                }
+
+                $('#Input_SelectedColorId').val(colorId);
+
+                $('#product-form').submit();
+            });
+
+
+        });
+    </script>
+}

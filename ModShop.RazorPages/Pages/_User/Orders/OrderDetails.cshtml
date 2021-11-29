@@ -1,0 +1,130 @@
+﻿@page "/User/Orders/{id}"
+@model ModShop.RazorPages.Pages._User.Orders.OrderDetailsModel
+@{
+}
+
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="order-summary clearfix">
+                    <div class="section-title">
+                        <h3 class="title">جزئیات سفارش شماره @Model.Order.OrderNumber</h3>
+                    </div>
+                    <table class="shopping-cart-table table rtl" id="printTable">
+                        <thead>
+                            <tr>
+                                <th>محصول</th>
+                                <th></th>
+                                <th class="text-center">قیمت</th>
+                                <th class="text-center">تعداد</th>
+                                <th class="text-center">قیمت کل</th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.Order.Items)
+                            {
+                                <tr>
+
+                                    <td class="thumb"><img src="@p.Product.Image" alt=""></td>
+                                    <td class="details">
+                                        <a href="#">@p.Product.Title</a>
+                                        <ul>
+                                            @if (p.Product.Brand != null)
+                                            {
+                                                <li><span>برند: @p.Product.Brand.Title</span></li>
+                                            }
+                                            @if (p.Product.Size != null)
+                                            {
+                                                <li><span>اندازه: @p.Product.Size.Title</span></li>
+                                            }
+                                            @if (p.Product.Color != null)
+                                            {
+                                                <li><span>رنگ: @p.Product.Color.Title</span></li>
+                                            }
+                                        </ul>
+                                    </td>
+
+                                    <td class="price text-center">
+                                        <strong>@p.Price تومان</strong>
+                                        @if (p.Discount > 0)
+                                        {
+                                            <br><del class="font-weak"><small>@(p.Price - p.Discount) تومان</small></del>
+                                        }
+                                    </td>
+                                    <td class="qty text-center">@p.Quantity</td>
+                                    <td class="total text-center"><strong class="primary-color">@(p.Price * p.Quantity) تومان</strong></td>
+                                    <td class="text-right"></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="empty" colspan="3"></th>
+                                <th>مجموع قیمت(@Model.Order.Items.Sum(x => x.Quantity)) کالا</th>
+                                <th colspan="2" class="sub-total">@Model.Order.TotalPrice تومان</th>
+                            </tr>
+                            <tr>
+                                <th class="empty" colspan="3"></th>
+                                <th>روش ارسال</th>
+                                <td colspan="2">ارسال رایگان</td>
+                            </tr>
+                            <tr>
+                                <th class="empty" colspan="3"></th>
+                                <th>تخفیف</th>
+                                <th colspan="2" class="total">@Model.Order.Discount تومان</th>
+                            </tr>
+
+                            <tr>
+                                <th class="empty" colspan="3"></th>
+                                <th>مالیات</th>
+                                <th colspan="2" class="total">@Model.Order.Tax تومان</th>
+                            </tr>
+
+
+                            <tr>
+                                <th class="empty" colspan="3"></th>
+                                <th>قابل پرداخت</th>
+                                <th colspan="2" class="total">@(Model.Order.TotalPrice + Model.Order.Tax - Model.Order.Discount) تومان</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="pull-left">
+
+                        <button id="print-btn" class="primary-btn">چاپ</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+
+@section Scripts{
+    <script>
+        function printData() {
+            var divToPrint = document.getElementById("printTable");
+
+            newWin = window.open("/Orders/Print");
+            setTimeout(function () {
+                console.log(newWin.document);
+                newWin.document.getElementById('print-container').innerHTML = divToPrint.outerHTML;
+                newWin.print();
+                newWin.close();
+            }, 1500);
+
+        }
+
+        $('#print-btn').on('click', function () {
+            printData();
+        });
+    </script>
+}

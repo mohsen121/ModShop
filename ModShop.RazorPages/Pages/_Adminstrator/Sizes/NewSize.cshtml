@@ -1,0 +1,44 @@
+﻿@page "/Adminstrator/Sizes/New"
+@inject ModShop.Application.Common.Interfaces.ICurrentUserService currentUserService
+@model ModShop.RazorPages.Pages._Adminstrator.Sizes.NewSizeModel
+@{
+}
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">
+            تعریف سایز جدید
+        </h3>
+
+    </div>
+
+    <form class="form" method="post">
+        <div class="card-body">
+            <input type="hidden" asp-for="Command.Entity.CreatedById" value="@currentUserService.UserId" />
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>عنوان:</label>
+                    <input type="text" asp-for="Command.Entity.Title" class="form-control" placeholder="عنوان کامل را وارد کنید">
+                    <span class="form-text text-muted">عنوان کامل را وارد کنید</span>
+                </div>
+                <div class="col-lg-6">
+                    <label>توضیحات:</label>
+                    <input type="text" asp-for="Command.Entity.Code" class="form-control" placeholder="کد را وارد کنید">
+                    <span class="form-text text-muted">لطفا کد سایز را وارد کنید</span>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-primary mr-2">ذخیره</button>
+                    <button type="reset" class="btn btn-secondary">لغو</button>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <button type="reset" class="btn btn-danger">حذف</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

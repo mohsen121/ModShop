@@ -1,0 +1,240 @@
+﻿@using ModShop.RazorPages;
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>فروشگاه مدشاپ</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet">
+
+    <!-- Bootstrap -->
+
+    <link type="text/css" rel="stylesheet" href="~/web/assets/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="~/web/assets/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="~/web/assets/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="~/web/assets/css/nouislider.min.css" />
+
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="~/web/assets/css/font-awesome.min.css">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="~/web/assets/css/style.css" />
+
+
+
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header>
+        <!-- top Header -->
+        @*<div id="top-header">
+                <div class="container">
+                    <div class="pull-left">
+                        <span>شماره تماس: 0123456789</span>
+                    </div>
+                    <div class="pull-right">
+                        <ul class="header-top-links">
+                            <li><a href="#">فروشگاه</a></li>
+                            <li><a href="#">خبرنامه</a></li>
+                            <li><a href="#">سؤالات متداول</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
+        <!-- /top Header -->
+        <!-- header -->
+        <div id="header">
+            <div class="container">
+                @(await Component.InvokeAsync<WebsiteHeaderViewComponent>())
+            </div>
+            <!-- header -->
+        </div>
+        <!-- container -->
+    </header>
+    <!-- /HEADER -->
+    <!-- NAVIGATION -->
+    @(await Component.InvokeAsync<NavbarViewComponent>())
+    <!-- /NAVIGATION -->
+    <!-- HOME -->
+    @RenderSection("Slider", false)
+    <!-- /HOME -->
+    <!-- section -->
+    @RenderBody()
+    <!-- /section -->
+    <!-- FOOTER -->
+    <footer id="footer" class="section section-grey">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- footer widget -->
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="footer">
+                        <!-- footer logo -->
+                        <div class="footer-logo">
+                            <a class="logo" href="#">
+                                <img src="~/web/assets/img/logo.png" alt="">
+                            </a>
+                        </div>
+                        <!-- /footer logo -->
+
+                        <p>فروشگاه کیف و کفش و مصنوعات چرمی مدشاپ</p>
+
+                        <!-- footer social -->
+                        <ul class="footer-social">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                        </ul>
+                        <!-- /footer social -->
+                    </div>
+                </div>
+                <!-- /footer widget -->
+                <!-- footer widget -->
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="footer">
+
+                        <img src="~/web/assets/img/samandehi.jpg">
+                    </div>
+                </div>
+                <!-- /footer widget -->
+
+                <div class="clearfix visible-sm visible-xs"></div>
+
+                <!-- footer widget -->
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-header">خدمات مشتری</h3>
+                        <ul class="list-links">
+                            <li><a href="/">صفحه اصلی</a></li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><a href="/User/Profile">حساب کاربری</a></li>
+                                <li><a href="/User/Order/Checkout"> تسویه حساب</a></li>
+                                <li><a href="/Account/Logout"> خروج</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="/Account/Login"> ورود</a></li>
+                                <li><a href="/Account/SignUp">ثبت نام</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <!-- /footer widget -->
+                <!-- footer subscribe -->
+                @*<div class="col-md-3 col-sm-6 col-xs-6">
+                        <div class="footer">
+                            <h3 class="footer-header">با ما بمانید</h3>
+                            <p>برای اطلاع از تخفیفات و اخبار مهم فروشگاه در خبرنامه عضو شوید.</p>
+                            <form>
+                                <div class="form-group">
+                                    <input class="input" placeholder="آدرس ایمیل">
+                                </div>
+                                <button class="primary-btn">عضویت در خبرنامه</button>
+                            </form>
+                        </div>
+                    </div>*@
+                <!-- /footer subscribe -->
+            </div>
+            <!-- /row -->
+            <hr>
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <!-- footer copyright -->
+                    <div class="footer-copyright">
+
+                        1400 &copy; تمامی حقوق این سایت متعلق به <span class="text-danger" target="_blank">مدشاپ </span>است.
+
+                    </div>
+                    <!-- /footer copyright -->
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </footer>
+    <!-- /FOOTER -->
+    <!-- jQuery Plugins -->
+    <script src="~/web/assets/js/jquery.min.js"></script>
+    <script src="~/web/assets/js/bootstrap.min.js"></script>
+    <script src="~/web/assets/js/slick.min.js"></script>
+    <script src="~/web/assets/js/nouislider.min.js"></script>
+    <script src="~/web/assets/js/jquery.zoom.min.js"></script>
+    <script src="~/web/assets/js/main.js"></script>
+
+    @Html.AntiForgeryToken()
+    <script>
+        function addToCart(id, count) {
+
+            if (!count) {
+                count = 1;
+            }
+            var d = {
+                'Dto.ProductId': id, 'Dto.Count': count
+            };
+            $.ajax({
+                url: '/User/Order/Cart?handler=Add',
+                method: "POST",
+                data: d,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function () {
+
+                    location.reload();
+                }
+            });
+        }
+
+        function removeFromCart(id) {
+
+            var d = {
+                'Dto.ProductId': id
+            };
+            $.ajax({
+                url: '/User/Order/Cart?handler=Remove',
+                method: "POST",
+                data: d,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function () {
+
+                    location.reload();
+                }
+            });
+        }
+
+        $('.btnAddCart').on('click', function (e) {
+            var id = $(this).data('productid');
+            var count = $(this).data('count');
+            addToCart(id, count);
+        });
+
+        $('.removeFromCart').on('click', function (e) {
+            var id = $(this).data('productid');
+            removeFromCart(id);
+        });
+
+    </script>
+    @RenderSection("Scripts", false)
+</body>
+
+</html>

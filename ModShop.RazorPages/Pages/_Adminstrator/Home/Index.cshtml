@@ -1,0 +1,171 @@
+﻿@page "/Adminstrator"
+@model ModShop.RazorPages.Pages._Adminstrator.Home.IndexModel
+@{
+
+
+}
+
+<div class="card card-custom gutter-b">
+    <!--begin::Header-->
+    <div class="card-header h-auto">
+        <!--begin::Title-->
+        <div class="card-title py-5">
+            <h3 class="card-label">
+                نمودار تعدادی خرید در 30 روز گذشته
+            </h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Header-->
+    <div class="card-body">
+        <!--begin::Chart-->
+        <div id="last_sale_chart"></div>
+        <!--end::Chart-->
+    </div>
+</div>
+
+<div class="card card-custom gutter-b">
+    <!--begin::Header-->
+    <div class="card-header h-auto">
+        <!--begin::Title-->
+        <div class="card-title py-5">
+            <h3 class="card-label">
+                نمودار مبلغی خرید در 30 روز گذشته
+            </h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Header-->
+    <div class="card-body">
+        <!--begin::Chart-->
+        <div id="last_amount_sale_chart"></div>
+        <!--end::Chart-->
+    </div>
+</div>
+
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">
+                نمودار پرفروش ترین محصولات
+            </h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin::Chart-->
+        <div id="top_sale_products" class="d-flex justify-content-center"></div>
+        <!--end::Chart-->
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        const primary = '#6993FF';
+        const success = '#1BC5BD';
+        const info = '#8950FC';
+        const warning = '#FFA800';
+        const danger = '#F64E60';
+
+        const lastSaleCountChart = "#last_sale_chart";
+        var lastSaleCountData = @Html.Raw(Json.Serialize(Model.LastSaleChartVm.Items.Select(x => x.SaleCount).ToArray()));
+        var lastSaleCountCats = @Html.Raw(Json.Serialize(Model.LastSaleChartVm.Items.Select(x => x.Date).ToArray()));
+        var lastSaleCountOptions = {
+            series: [{
+                name: "تعداد فروش در 30 روز گذشته",
+                data: lastSaleCountData
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight'
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                },
+            },
+            xaxis: {
+                categories: lastSaleCountCats.map(function (item) { return new Date(item).toLocaleDateString('fa-IR') }),
+            },
+            colors: [primary]
+        };
+
+        var chart1 = new ApexCharts(document.querySelector(lastSaleCountChart), lastSaleCountOptions);
+        chart1.render();
+
+        ////////////
+
+        const lastSaleAmountChart = "#last_amount_sale_chart";
+        var lastSaleAmountData = @Html.Raw(Json.Serialize(Model.LastAmountSaleChartVm.Items.Select(x => x.Sale).ToArray()));
+        var lastSaleAmountCats = @Html.Raw(Json.Serialize(Model.LastAmountSaleChartVm.Items.Select(x => x.Date).ToArray()));
+        var lastSaleAmountOptions = {
+            series: [{
+                name: "مقدار فروش در 30 روز گذشته",
+                data: lastSaleAmountData
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight'
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                },
+            },
+            xaxis: {
+                categories: lastSaleAmountCats.map(function (item) { return new Date(item).toLocaleDateString('fa-IR') }),
+            },
+            colors: [primary]
+        };
+
+        var chart2 = new ApexCharts(document.querySelector(lastSaleAmountChart), lastSaleAmountOptions);
+        chart2.render();
+
+        /////////////////////////////
+
+        const topProductsChart = "#top_sale_products";
+        var topProductsOptions = {
+            series: @Html.Raw(Json.Serialize(Model.TopSaleProductsChartVm.Products.Select(x => x.SaleCount).ToArray())),
+            chart: {
+                width: 380,
+                type: 'pie',
+            },
+            labels: @Html.Raw(Json.Serialize(Model.TopSaleProductsChartVm.Products.Select(x => x.Title).ToArray())),
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
+            colors: [primary, success, warning, danger, info]
+        };
+
+        var chart3 = new ApexCharts(document.querySelector(topProductsChart), topProductsOptions);
+        chart3.render();
+
+    </script>
+}

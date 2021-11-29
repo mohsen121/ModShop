@@ -1,0 +1,66 @@
+﻿@model ModShop.RazorPages.Pages._Adminstrator.ViewComponents.Select2Dto
+
+<select class="form-control select2 @(string.IsNullOrEmpty(Model.Class) ? "" : Model.Class)" id="@Model.Id" name="@Model.Name">
+    @if (Model.Items != null && Model.Items.Any())
+    {
+        @foreach (var item in Model.Items)
+        {
+            <option value="@item.Key" selected="@(item.IsSelected ? "selected" : null)">@item.Text</option>
+        }
+
+
+
+    }
+    else
+    {
+        <option value="@null">جستجو کنید</option>
+    }
+</select>
+
+<script>
+
+    $(document).ready(function () {
+        var model = @Html.Raw(Json.Serialize(Model));
+        var s2Params = {
+            dir: 'rtl',
+            //tags: true,
+          minimumInputLength: 1,
+            closeOnSelect: false
+        };
+
+        if (model.attributes) {
+            for (o in model.attributes) {
+                $('#@Model.Id').attr(o, model.attributes[o]);
+            }
+        }
+
+        if (model.ajaxUrl) {
+            s2Params.ajax = {
+                url: "@Model.AjaxUrl",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                    };
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                processResults: function (data) {
+                    // parse the results into the format expected by Select2.
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            };
+        }
+
+        $('#@Model.Id').select2(s2Params);
+    });
+
+</script>

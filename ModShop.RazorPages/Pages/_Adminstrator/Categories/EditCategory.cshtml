@@ -1,0 +1,66 @@
+﻿@page "/Adminstrator/Categories/Edit/{id}"
+@using ModShop.RazorPages.Pages._Adminstrator.ViewComponents.Select2
+@using ModShop.RazorPages.Pages._Adminstrator.ViewComponents
+@model ModShop.RazorPages.Pages._Adminstrator.Categories.EditCategoryModel
+@{
+}
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">
+            ویرایش دسته بندی
+        </h3>
+
+    </div>
+
+    <form class="form" method="post">
+        <div class="card-body">
+            <input type="hidden" asp-for="Command.Entity.Id" />
+            <input type="hidden" asp-for="Command.Entity.Created" />
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>عنوان:</label>
+                    <input type="text" asp-for="Command.Entity.Title" class="form-control" placeholder="عنوان کامل را وارد کنید">
+                    <span class="form-text text-muted">عنوان کامل را وارد کنید</span>
+                </div>
+                <div class="col-lg-6">
+                    <label>توضیحات:</label>
+                    <input type="text" asp-for="Command.Entity.Description" class="form-control" placeholder="توضیحات را وارد کنید">
+                    <span class="form-text text-muted">لطفا توضیحات دسته بندی را وارد کنید</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>زیرمجموعه:</label>
+                    @{
+                        var parentItems = new List<Select2Item>();
+                        if (Model.Command.Entity.ParentId.HasValue)
+                        {
+                            parentItems.Add(new Select2Item { IsSelected = true, Key = Model.Command.Entity.ParentId.Value, Text = Model.Command.Entity.Parent.Title });
+                        }
+                        else
+                        {
+                            parentItems = null;
+                        }
+                    }
+                    @(await Component.InvokeAsync<Select2ViewComponent>
+    (new Select2Dto { AjaxUrl = "/Adminstrator/Categories/Search", Id = "categories", Name = "Command.Entity.ParentId", Items = parentItems }))
+                    <span class="form-text text-muted">اگر دسته بندی زیرمجموعه دسته بندی دیگری است انتخاب کنید</span>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-primary mr-2">ذخیره</button>
+                    <a href="/Adminstrator/Categories" class="btn btn-secondary">لغو</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

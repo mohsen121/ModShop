@@ -1,0 +1,68 @@
+﻿@page "/Adminstrator/Colors/New"
+@using ModShop.Application.Common.Interfaces
+@inject ICurrentUserService currentUserService
+@model ModShop.RazorPages.Pages._Adminstrator.Colors.NewColorModel
+@{
+}
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">
+            تعریف رنگ جدید
+        </h3>
+    </div>
+
+    <form class="form" method="post">
+        <div class="card-body">
+            <input type="hidden" asp-for="Command.Entity.CreatedById" value="@currentUserService.UserId" />
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label>عنوان:</label>
+                    <input type="text" asp-for="Command.Entity.Title" class="form-control" placeholder="عنوان کامل را وارد کنید">
+                    <span class="form-text text-muted">عنوان کامل را وارد کنید</span>
+                </div>
+                <div class="col-lg-6">
+                    <label>کد رنگ:</label>
+                    <input autocomplete="off" type="text" asp-for="Command.Entity.HexCode" class="form-control" placeholder="کد رنگ را وارد کنید">
+                    <span class="form-text text-muted">لطفا کد رنگ را وارد کنید</span>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-primary mr-2">ذخیره</button>
+                    <a href="/Adminstrator/Colors" class="btn btn-secondary">لغو</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script src="~/assets/plugins/custom/minicolor/jquery.minicolors.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Command_Entity_HexCode').minicolors({
+                control: 'hue',
+                defaultValue: '#000000',
+                format: 'hex',
+                keywords: '',
+                inline: false,
+                letterCase: 'lowercase',
+                opacity: $(this).attr('data-opacity'),
+                position: 'bottom',
+                swatches: [],
+                change: function (value, opacity) {
+                    if (!value) return;
+                    $('#Command_Entity_HexCode').val(value.replace('#', ''));
+                },
+                theme: 'bootstrap'
+            });
+
+            $('#Command_Entity_HexCode').val($('#Command_Entity_HexCode').val().replace('#', ''));
+
+        });
+    </script>
+
+}

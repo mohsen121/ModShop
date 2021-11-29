@@ -1,0 +1,17 @@
+﻿@page "/Adminstrator/Account/Logout"
+@model ModShop.RazorPages.Pages._Adminstrator._Identity.Pages.Account.LogoutModel
+@{
+}
+
+@Html.AntiForgeryToken()
+<form id="logout-form" method="post"></form>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#logout-form').submit();
+        });
+
+    </script>
+}

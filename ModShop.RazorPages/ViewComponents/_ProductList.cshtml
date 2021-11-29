@@ -1,0 +1,12 @@
+﻿@using ModShop.Common.Util
+@model ModShop.RazorPages.ViewComponents.ProductListViewComponent.OutputModel
+
+
+@foreach (var p in Model.Products)
+{
+    <div class="col-md-3 col-sm-6 col-xs-6">
+
+        @(await Component.InvokeAsync<ModShop.RazorPages.ViewComponents.Shared.ProductViewComponent>(p))
+    </div>
+}
+

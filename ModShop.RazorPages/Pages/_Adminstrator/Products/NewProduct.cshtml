@@ -1,0 +1,212 @@
+﻿@page "/Adminstrator/Products/New"
+@inject ModShop.Application.Common.Interfaces.ICurrentUserService currentUserService
+@using ModShop.RazorPages.Pages._Adminstrator.ViewComponents.Select2
+@using ModShop.RazorPages.Pages._Adminstrator.ViewComponents
+@model ModShop.RazorPages.Pages._Adminstrator.Products.NewProductModel
+@{ }
+
+<div class="card card-custom gutter-b example example-compact">
+    <div class="card-header">
+        <h3 class="card-title">
+            تعریف محصول جدید
+        </h3>
+    </div>
+
+    <form class="form" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            <input type="hidden" asp-for="Command.Entity.CreatedById" value="@currentUserService.UserId" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <label class="col-xl-3 col-lg-3 col-form-label text-right">تصویر محصول</label>
+
+                    <div class="image-input image-input-empty image-input-outline" id="pro_image" style="background-image: url(/assets/media/blank.jpg)">
+                        <div class="image-input-wrapper"></div>
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="تغییر تصویر">
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input required type="file" asp-for="Image" accept=".png, .jpg, .jpeg" />
+
+                            <input type="hidden" name="profile_avatar_remove" />
+                        </label>
+
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="لغو تصویر">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="حذف تصویر">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4">
+                    <label>عنوان:</label>
+                    <input type="text" asp-for="Command.Entity.Title" class="form-control" placeholder="عنوان کامل را وارد کنید">
+
+                    <span class="form-text text-muted">عنوان کامل را وارد کنید</span>
+                    <span asp-validation-for="Command.Entity.Title" class="text-danger"></span>
+                </div>
+                <div class="col-lg-4">
+                    <label>توضیحات:</label>
+                    <input type="text" asp-for="Command.Entity.Description" class="form-control" placeholder="توضیحات را وارد کنید">
+                    <span class="form-text text-muted">لطفا توضیحات محصول را وارد کنید</span>
+                    <span asp-validation-for="Command.Entity.Description" class="text-danger"></span>
+                </div>
+                <div class="col-lg-4">
+                    <label>دسته بندی:</label>
+                    @(await Component.InvokeAsync<Select2ViewComponent>
+    (new Select2Dto { AjaxUrl = "/Adminstrator/Categories/Search", Id = "category", Name = "Command.Entity.CategoryId" }))
+                    <span class="form-text text-muted">لطفا دسته بندی محصول را وارد کنید</span>
+                    <span asp-validation-for="Command.Entity.CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label>قیمت:</label>
+                    <input value="0" type="number" asp-for="Command.Entity.Price" class="form-control" placeholder="قیمت را وارد کنید">
+                    <span class="form-text text-muted">قیمت را وارد کنید</span>
+                    <span asp-validation-for="Command.Entity.Price" class="text-danger"></span>
+                </div>
+                <div class="col-lg-3">
+                    <label>تخفیف:</label>
+                    <input value="0" type="number" asp-for="Command.Entity.Discount" class="form-control" placeholder="تخفیف را وارد کنید">
+                    <span class="form-text text-muted">لطفا تخفیف محصول را وارد کنید</span>
+                    <span asp-validation-for="Command.Entity.Discount" class="text-danger"></span>
+                </div>
+
+                <div class="col-lg-3">
+                    <label>تعداد موجود:</label>
+                    <input value="0" type="number" asp-for="Command.Entity.Quantity" class="form-control" placeholder="تعداد موجود را وارد کنید">
+                    <span class="form-text text-muted">لطفا تعداد محصول را وارد کنید</span>
+                    <span asp-validation-for="Command.Entity.Quantity" class="text-danger"></span>
+                </div>
+
+                <div class="col-lg-3">
+                    <label>برند:</label>
+
+                    @(await Component.InvokeAsync<Select2ViewComponent>
+    (new Select2Dto { AjaxUrl = "/Adminstrator/Brands/Search", Id = "brand", Name = "Command.Entity.BrandId"}))
+                    <span class="form-text text-muted">برند محصول انتخاب کنید</span>
+                    <span asp-validation-for="Command.Entity.BrandId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="checkbox">
+                    <input id="base_product_check" type="checkbox" checked="checked" />
+                    <span></span>
+                    محصول پایه؟
+                </label>
+            </div>
+            <div class="form-group row" id="un_base_div">
+
+                <div class="col-lg-3">
+                    <label>رنگ:</label>
+
+                    @(await Component.InvokeAsync<Select2ViewComponent>
+    (new Select2Dto { AjaxUrl = "/Adminstrator/Colors/Search", Id = "color", Name = "Command.Entity.ColorId"}))
+                    <span class="form-text text-muted">رنگ محصول انتخاب کنید</span>
+                    <span asp-validation-for="Command.Entity.ColorId" class="text-danger"></span>
+                </div>
+
+                <div class="col-lg-3">
+                    <label>سایز:</label>
+
+                    @(await Component.InvokeAsync<Select2ViewComponent>
+    (new Select2Dto { AjaxUrl = "/Adminstrator/Sizes/Search", Id = "size", Name = "Command.Entity.SizeId"}))
+                    <span class="form-text text-muted">سایز محصول انتخاب کنید</span>
+                    <span asp-validation-for="Command.Entity.SizeId" class="text-danger"></span>
+                </div>
+
+                <div class="col-lg-3">
+                    <label>محصول پایه:</label>
+
+                    @(await Component.InvokeAsync<Select2ViewComponent>
+    (new Select2Dto { AjaxUrl = "/Adminstrator/Products/Search", Id = "baseProduct", Name = "Command.Entity.BaseProductId" }))
+                    <span class="form-text text-muted">محصول پایه راانتخاب کنید</span>
+                    <span asp-validation-for="Command.Entity.BaseProductId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-6">
+                    <button type="submit" class="btn btn-primary mr-2">ذخیره</button>
+                    <a href="/Adminstrator/Products" class="btn btn-secondary">لغو</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            function checkBaseProduct() {
+                var check = $('#base_product_check');
+                if (check.prop('checked') == true) {
+                    $('#un_base_div').hide(500);
+                } else {
+                    $('#un_base_div').show(500);
+                }
+            }
+
+            function readIMG(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#preview').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            checkBaseProduct();
+
+            $('#base_product_check').on('change', function (e) {
+                checkBaseProduct();
+            });
+
+            var image = new KTImageInput('pro_image');
+
+            image.on('cancel', function (imageInput) {
+                swal.fire({
+                    title: 'تصویر با موفقیت لغو شد.',
+                    type: 'success',
+                    buttonsStyling: false,
+                    confirmButtonText: 'عالی!',
+                    confirmButtonClass: 'btn btn-primary font-weight-bold'
+                });
+            });
+
+            image.on('change', function (imageInput) {
+                console.log(imageInput);
+                swal.fire({
+                    title: 'تصویر با موفقیت تغییر کرد',
+                    type: 'success',
+                    buttonsStyling: false,
+                    confirmButtonText: 'عالی!',
+                    confirmButtonClass: 'btn btn-primary font-weight-bold'
+                });
+            });
+
+            image.on('remove', function (imageInput) {
+                swal.fire({
+                    title: 'تصویر با موفقیت حذف شد.',
+                    type: 'error',
+                    buttonsStyling: false,
+                    confirmButtonText: 'فهمیدم!',
+                    confirmButtonClass: 'btn btn-primary font-weight-bold'
+                });
+            });
+
+            $(document).submit(function (e) {
+                $('#Command.Entity.Image').val($('.image-input-wrapper').html());
+            });
+        });
+    </script>
+}

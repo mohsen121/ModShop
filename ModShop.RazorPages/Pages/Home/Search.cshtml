@@ -1,0 +1,456 @@
+﻿@page "/Search"
+@model ModShop.RazorPages.Pages.Home.SearchModel
+@{
+}
+
+<form id="filter-form" method="get">
+    @if (Model.SearchFilters.BrandIds != null && Model.SearchFilters.BrandIds.Any())
+    {
+        @for (var i = 0; i < Model.SearchFilters.BrandIds.Count(); i++)
+        {
+            <input type="hidden" asp-for="SearchFilters.BrandIds[i]" />
+        }
+
+        <input name="SearchFilters.BrandIds[{i}]_exists" type="hidden" value="@Model.SearchFilters.BrandIds.Count()" />
+    }
+
+    @if (Model.SearchFilters.ColorIds != null && Model.SearchFilters.ColorIds.Any())
+    {
+        @for (var i = 0; i < Model.SearchFilters.ColorIds.Count(); i++)
+        {
+            <input type="hidden" asp-for="SearchFilters.ColorIds[i]" />
+        }
+
+        <input name="SearchFilters.ColorIds[{i}]_exists" type="hidden" value="@Model.SearchFilters.ColorIds.Count()" />
+
+    }
+
+    @if (Model.SearchFilters.SizeIds != null && Model.SearchFilters.SizeIds.Any())
+    {
+        @for (var i = 0; i < Model.SearchFilters.SizeIds.Count(); i++)
+        {
+            <input type="hidden" asp-for="SearchFilters.SizeIds[i]" />
+        }
+        <input name="SearchFilters.SizeIds[{i}]_exists" type="hidden" value="@Model.SearchFilters.SizeIds.Count()" />
+    }
+
+    @if (Model.SearchFilters.CategoryIds != null && Model.SearchFilters.CategoryIds.Any())
+    {
+        @for (var i = 0; i < Model.SearchFilters.CategoryIds.Count(); i++)
+        {
+            <input type="hidden" asp-for="SearchFilters.CategoryIds[i]" />
+        }
+        <input name="SearchFilters.CategoryIds[{i}]_exists" type="hidden" value="@Model.SearchFilters.CategoryIds.Count()" />
+    }
+    <input type="hidden" asp-for="SearchFilters.Query" />
+
+    <input type="hidden" asp-for="SearchFilters.MaxPrice" />
+    <input type="hidden" asp-for="SearchFilters.MinPrice" />
+    <input type="hidden" asp-for="PageNumber" />
+</form>
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">فیلتر ها:</h3>
+
+                    @if (!string.IsNullOrEmpty(Model.SearchFilters.Query))
+                    {
+                        <ul class="filter-list">
+                            <li><span class="text-uppercase">کلمه کلیدی:</span></li>
+
+                            <li><a class="activeQuery" href="#">@Model.SearchFilters.Query</a></li>
+
+                        </ul>
+                    }
+
+                    @if (Model.SearchFilters.ColorIds != null && Model.SearchFilters.ColorIds.Any())
+                    {
+                        <ul class="filter-list">
+                            <li><span class="text-uppercase">رنگ:</span></li>
+                            @foreach (var c in Model.SearchFilters.ColorIds)
+                            {
+                                var color = Model.Colors.FirstOrDefault(x => x.Id == c);
+                                <li><a class="activeFilterColors" data-id="@c" href="#" style="color:#FFF; background-color:#@color.HexCode;">@color.Title</a></li>
+                            }
+                        </ul>
+                    }
+
+                    @if (Model.SearchFilters.SizeIds != null && Model.SearchFilters.SizeIds.Any())
+                    {
+                        <ul class="filter-list">
+                            <li><span class="text-uppercase">اندازه:</span></li>
+                            @foreach (var c in Model.SearchFilters.SizeIds)
+                            {
+                                var size = Model.Sizes.FirstOrDefault(x => x.Id == c);
+                                <li><a class="activeFilterSizes" data-id="@c" href="#">@size.Title</a></li>
+                            }
+                        </ul>
+                    }
+
+
+                    <ul class="filter-list">
+                        <li><span class="text-uppercase">قیمت:</span></li>
+                        <li>کمترین: @Model.MinPrice تومان</li>
+                        <li>بیشترین: @Model.MaxPrice تومان</li>
+                    </ul>
+
+                    @if (Model.SearchFilters.CategoryIds != null && Model.SearchFilters.CategoryIds.Any())
+                    {
+                        <ul class="filter-list">
+                            <li><span class="text-uppercase">دسته بندی:</span></li>
+                            @foreach (var c in Model.SearchFilters.CategoryIds)
+                            {
+                                var cat = Model.Categories.FirstOrDefault(x => x.Id == c);
+                                <li><a class="activeFilterCategories" data-id="@c" href="#">@cat.Title</a></li>
+                            }
+                        </ul>
+                    }
+
+                    @if (Model.SearchFilters.BrandIds != null && Model.SearchFilters.BrandIds.Any())
+                    {
+                        <ul class="filter-list">
+                            <li><span class="text-uppercase">برند:</span></li>
+                            @foreach (var c in Model.SearchFilters.BrandIds)
+                            {
+                                var cat = Model.Brands.FirstOrDefault(x => x.Id == c);
+                                <li><a class="activeFilterBrands" data-id="@c" href="#">@cat.Title</a></li>
+                            }
+                        </ul>
+                    }
+
+
+                    <button class="primary-btn" id="clearFilters">پاک کردن همه</button>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">فیلتر بر اساس قیمت (تومان)</h3>
+                    <div id="price-slider"></div>
+                </div>
+                <!-- aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">فیلتر بر اساس رنگ:</h3>
+                    <ul class="color-option">
+
+                        @foreach (var c in Model.Colors)
+                        {
+                            var isActive = Model.SearchFilters.ColorIds != null && Model.SearchFilters.ColorIds.Contains(c.Id);
+                            <li class="@(isActive ? "active" : null)">
+                                <a class="filterColors" data-active=@isActive.ToString().ToLower() data-id="@c.Id" href="#" style="background-color:#@c.HexCode;"></a>
+                            </li>
+                        }
+
+
+
+
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">فیلتر بر اساس اندازه:</h3>
+                    <ul class="size-option">
+                        @foreach (var s in Model.Sizes)
+                        {
+                            var isActive = Model.SearchFilters.SizeIds != null && Model.SearchFilters.SizeIds.Contains(s.Id);
+                            <li class="@(isActive ? "active" : null)">
+                                <a class="filterSizes" data-active=@isActive.ToString().ToLower() data-id="@s.Id" href="#">@s.Title</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">فیلتر بر اساس برند</h3>
+                    <ul class="list-links">
+                        @foreach (var s in Model.Brands)
+                        {
+                            var isActive = Model.SearchFilters.BrandIds != null && Model.SearchFilters.BrandIds.Contains(s.Id);
+                            <li class="@(isActive ? "active" : null)">
+                                <a class="filterBrands" data-active=@isActive.ToString().ToLower() data-id="@s.Id" href="#">@s.Title</a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <div class="aside">
+                    <h3 class="aside-title">فیلتر بر دسته بندی</h3>
+                    <ul class="list-links">
+                        @foreach (var s in Model.Categories)
+                        {
+                            var isActive = Model.SearchFilters.CategoryIds != null && Model.SearchFilters.CategoryIds.Contains(s.Id);
+                            <li class="@(isActive ? "active" : null)">
+                                <a class="filterCategories" data-active=@isActive.ToString().ToLower() data-id="@s.Id" href="#">@s.Title</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <!-- /aside widget -->
+                <!-- aside widget -->
+                <!-- /aside widget -->
+            </div>
+            <!-- /ASIDE -->
+            <!-- MAIN -->
+            <div id="main" class="col-md-9">
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="pull-right">
+                        @*<div class="row-filter">
+                                <a href="#"><i class="fa fa-th-large"></i></a>
+                                <a href="#" class="active"><i class="fa fa-bars"></i></a>
+                            </div>*@
+                        @*<div class="sort-filter">
+                                <span class="text-uppercase">مرتب سازی بر اساس:</span>
+                                <select class="input">
+                                    <option value="0">ارزان ترین</option>
+                                    <option value="0">گران ترین</option>
+                                    <option value="0">محبوب ترین</option>
+                                </select>
+                                <a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
+                            </div>*@
+
+                    </div>
+                    <div class="pull-left">
+                        @*<div class="page-filter">
+                                <span class="text-uppercase">نمایش:</span>
+                                <select class="input">
+                                    <option value="0">10</option>
+                                    <option value="1">20</option>
+                                    <option value="2">30</option>
+                                </select>
+                            </div>*@
+                        <ul class="store-pages">
+                            <li><span class="text-uppercase">صفحه:</span></li>
+                            @{ var pageStaps = (int)Math.Ceiling((double)Model.TotalCount / 10); }
+                            @for (var i = 0; i < pageStaps; i++)
+                            {
+                                var isActive = i + 1 == Model.PageNumber;
+                                if (isActive)
+                                {
+                                    <li class="active">@(i +1 )</li>
+
+                                }
+                                else
+                                {
+                                    <li><a class="pageNumber" data-num="@(i+1)" href="#">@(i +1 )</a></li>
+                                }
+                            }
+
+                            @if (pageStaps > 1)
+                            {
+                                <li><a class="pageNumber" data-num="@(Model.PageNumber+1)" href="#"><i class="fa fa-caret-left"></i></a></li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+                <!-- /store top filter -->
+                <!-- STORE -->
+                <div id="store">
+                    <!-- row -->
+                    <div class="row">
+                        <!-- Product Single -->
+                        @foreach (var p in Model.Products)
+                        {
+                            <div class="col-md-4 col-sm-6 col-xs-6">
+                                @(await Component.InvokeAsync<ProductViewComponent>(p))
+                            </div>
+                            <div class="clearfix visible-sm visible-xs"></div>
+                        }
+                    </div>
+                    <!-- /row -->
+                </div>
+                <!-- /STORE -->
+                <!-- store bottom filter -->
+                <div class="store-filter clearfix">
+                    <div class="pull-right">
+                        @*<div class="row-filter">
+                                <a href="#"><i class="fa fa-th-large"></i></a>
+                                <a href="#" class="active"><i class="fa fa-bars"></i></a>
+                            </div>*@
+                        @*<div class="sort-filter">
+                                <span class="text-uppercase">مرتب سازی بر اساس:</span>
+                                <select class="input">
+                                    <option value="0">ارزان ترین</option>
+                                    <option value="0">گران ترین</option>
+                                    <option value="0">محبوب ترین</option>
+                                </select>
+                                <a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
+                            </div>*@
+
+                    </div>
+                    <div class="pull-left">
+                        @*<div class="page-filter">
+                                <span class="text-uppercase">نمایش:</span>
+                                <select class="input">
+                                    <option value="0">10</option>
+                                    <option value="1">20</option>
+                                    <option value="2">30</option>
+                                </select>
+                            </div>*@
+                        <ul class="store-pages">
+                            <li><span class="text-uppercase">صفحه:</span></li>
+                            @for (var i = 0; i < pageStaps; i++)
+                            {
+                                var isActive = i + 1 == Model.PageNumber;
+                                if (isActive)
+                                {
+                                    <li class="active">@(i +1 )</li>
+
+                                }
+                                else
+                                {
+                                    <li><a class="pageNumber" data-num="@(i+1)" href="#">@(i +1 )</a></li>
+                                }
+                            }
+
+                            @if (pageStaps > 1)
+                            {
+                                <li><a class="pageNumber" data-num="@(Model.PageNumber+1)" href="#"><i class="fa fa-caret-left"></i></a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <!-- /store bottom filter -->
+            </div>
+            <!-- /MAIN -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var slider = document.getElementById('price-slider');
+            noUiSlider.create(slider, {
+                start: [@Model.MinPrice, @Model.MaxPrice],
+                connect: true,
+                tooltips: [true, true],
+                format: {
+                    to: function (value) {
+                        return value.toFixed(0);
+                    },
+                    from: function (value) {
+                        return value
+                    }
+                },
+                range: {
+                    'min': 1000,
+                    'max': 99999999
+                }
+            });
+
+            slider.noUiSlider.on('change', function () {
+                var vals = slider.noUiSlider.get();
+                $("input[name='SearchFilters.MinPrice']").val(vals[0]);
+                $("input[name='SearchFilters.MaxPrice']").val(vals[1]);
+                submitForm();
+            });
+
+            $('.filterColors').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.ColorIds[{i}]']", "SearchFilters.ColorIds[{i}]");
+
+            });
+
+            $('.filterBrands').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.BrandIds[{i}]']", "SearchFilters.BrandIds[{i}]");
+             });
+
+            $('.filterSizes').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.SizeIds[{i}]']", "SearchFilters.SizeIds[{i}]");
+            });
+
+            $('.filterCategories').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.CategoryIds[{i}]']", "SearchFilters.CategoryIds[{i}]");
+            });
+
+            $('.activeFilterCategories').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.CategoryIds[{i}]']", "SearchFilters.CategoryIds[{i}]", true);
+            });
+
+            $('.activeFilterBrands').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.BrandIds[{i}]']", "SearchFilters.BrandIds[{i}]", true);
+            });
+
+            $('.activeFilterSizes').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.SizeIds[{i}]']", "SearchFilters.SizeIds[{i}]", true);
+            });
+
+            $('.activeFilterColors').on('click', function (e) {
+                mapFormElement(this, "input[name='SearchFilters.ColorIds[{i}]']", "SearchFilters.ColorIds[{i}]", true);
+            });
+
+
+            function mapFormElement(e, a, name, isRemoved = false) {
+
+                var id = $(e).data('id');
+                var isActive = $(e).data('active');
+                var values = [];
+                var exists = $("input[name='" + name + "_exists']").val();
+                if (exists !== undefined) {
+                    for (var i = 0; i < exists; i++) {
+                        var ac = a.replace('{i}', i);
+                        if ((isRemoved && $(ac).val() == id))
+                            $(ac).val('');
+                        else
+                            values.push($(ac).val());
+                    }
+                }
+
+                console.log(isRemoved);
+                console.log(values);
+                if (values.filter(function (v) { return v == id; }).length <= 0 && !isRemoved)
+                    values.push(id);
+
+                console.log(values);
+
+                for (var i = 0; i < values.length; i++) {
+                    var accessName = a.replace('{i}', i);
+                    var element = document.querySelector(accessName);
+                    if (element) {
+                        $(accessName).val(values[i]);
+
+                    } else {
+                        var input = document.createElement('input');
+                        input.name = name.replace('{i}', i);
+                        input.value = values[i];
+                        input.type = 'hidden';
+                        document.getElementById('filter-form').appendChild(input);
+                    }
+                }
+
+
+                submitForm();
+            }
+
+            $('.activeQuery').on('click', function (e) {
+
+                $("input[id='SearchFilters_Query']").val('');
+
+                submitForm();
+            });
+
+            $('.pageNumber').on('click', function (e) {
+                var num = $(this).data('num');
+                $("input[name='PageNumber']").val(num);
+                submitForm();
+            });
+
+            function submitForm() {
+                $('#filter-form').submit();
+            }
+        });
+    </script>
+}

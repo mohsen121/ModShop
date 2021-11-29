@@ -1,0 +1,8 @@
+﻿@page "/Adminstrator/OrderItems"
+@model ModShop.RazorPages.Pages._Adminstrator.Orders.OrderItemListModel
+@{
+}
+
+@Html.AntiForgeryToken()
+
+<vc:datatable dto="Model.Dto"></vc:datatable>

@@ -1,0 +1,41 @@
+﻿@page "/Adminstrator/Account/Login"
+@model ModShop.RazorPages.Pages._Adminstrator._Identity.Pages.Account.LoginModel
+@{
+}
+
+<div class="login-signin">
+    <div class="mb-20">
+        <h3 class="opacity-40 font-weight-normal">ورود به پنل مدیریت</h3>
+        <p class="opacity-40">نام کاربری و کلمه عبور خود را وارد کنید</p>
+    </div>
+    <form class="form" asp-route-returnurl="@ViewData["ReturnUrl"]">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <input class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" type="text" placeholder="پست الکترونیک" asp-for="Input.Email" autocomplete="off" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" type="password" placeholder="کلمه عبور" asp-for="Input.Password" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group d-flex flex-wrap justify-content-between align-items-center px-8 opacity-60">
+            <div class="checkbox-inline">
+                <label class="checkbox checkbox-outline checkbox-white text-white m-0">
+                    <input type="checkbox" asp-for="Input.RememberMe" />
+                    <span></span>
+                    مرا به خاطر بسپار
+                </label>
+            </div>
+            <a href="#" class="text-white font-weight-bold">کلمه عبور را فراموش کرده اید؟</a>
+        </div>
+        <div class="form-group text-center mt-10">
+            <button type="submit" class="btn btn-pill btn-primary opacity-90 px-15 py-3">ورود</button>
+        </div>
+    </form>
+    @*<div class="mt-10">
+            <span class="opacity-40 mr-4">
+                حساب کاربری ندارید؟
+            </span>
+            <a href="javascript:;" id="kt_login_signup" class="text-white opacity-30 font-weight-normal">ثبت نام</a>
+        </div>*@
+</div>

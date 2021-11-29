@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>61186555-5e1d-42bc-87b6-00c01551f85e</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Pages\Error.cshtml.cs" />
+		<Compile Remove="Pages\Index.cshtml.cs" />
+		<Compile Remove="Pages\Privacy.cshtml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="Pages\Error.cshtml" />
+		<Content Remove="Pages\Index.cshtml" />
+		<Content Remove="Pages\Privacy.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ClosedXML" Version="0.95.4" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.32" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ModShop.Application\ModShop.Application.csproj" />
+		<ProjectReference Include="..\ModShop.Common\ModShop.Common.csproj" />
+		<ProjectReference Include="..\ModShop.Domain\ModShop.Domain.csproj" />
+		<ProjectReference Include="..\ModShop.Infrustracture\ModShop.Infrustracture.csproj" />
+		<ProjectReference Include="..\ModShop.Persistence\ModShop.Persistence.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\account\login\" />
+	</ItemGroup>
+
+</Project>

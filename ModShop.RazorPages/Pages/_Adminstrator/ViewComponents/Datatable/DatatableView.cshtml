@@ -1,0 +1,670 @@
+﻿@model ModShop.RazorPages.Pages._Adminstrator.ViewComponents.DatatableDto
+<!--begin::Card-->
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon"><i class="flaticon2-delivery-package text-primary"></i></span>
+            <h3 class="card-label">@Model.PageTitle</h3>
+        </div>
+        <div class="card-toolbar">
+            <!--begin::دراپ دان-->
+            <!--<div class="dropdown dropdown-inline mr-2">-->
+            @*<button type="button" class="btn btn-light-primary font-weight-bolder dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="svg-icon svg-icon-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <path d="M3,16 L5,16 C5.55228475,16 6,15.5522847 6,15 C6,14.4477153 5.55228475,14 5,14 L3,14 L3,12 L5,12 C5.55228475,12 6,11.5522847 6,11 C6,10.4477153 5.55228475,10 5,10 L3,10 L3,8 L5,8 C5.55228475,8 6,7.55228475 6,7 C6,6.44771525 5.55228475,6 5,6 L3,6 L3,4 C3,3.44771525 3.44771525,3 4,3 L10,3 C10.5522847,3 11,3.44771525 11,4 L11,19 C11,19.5522847 10.5522847,20 10,20 L4,20 C3.44771525,20 3,19.5522847 3,19 L3,16 Z" fill="#000000" opacity="0.3" />
+                                <path d="M16,3 L19,3 C20.1045695,3 21,3.8954305 21,5 L21,15.2485298 C21,15.7329761 20.8241635,16.200956 20.5051534,16.565539 L17.8762883,19.5699562 C17.6944473,19.7777745 17.378566,19.7988332 17.1707477,19.6169922 C17.1540423,19.602375 17.1383289,19.5866616 17.1237117,19.5699562 L14.4948466,16.565539 C14.1758365,16.200956 14,15.7329761 14,15.2485298 L14,5 C14,3.8954305 14.8954305,3 16,3 Z" fill="#000000" />
+                            </g>
+                        </svg>
+                    </span>		خروجی گرفتن
+                </button>*@
+
+            <!--<!--begin::دراپ دان Menu-->
+            <!--@*<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                <ul class="navi flex-column navi-hover py-2">
+                    <li class="navi-header font-weight-bolder text-uppercase font-size-sm text-primary pb-2">
+                        گزینه ای را انتخاب کنید:
+                    </li>
+                    <li class="navi-item">
+                        <a href="../../../index.html#" class="navi-link">
+                            <span class="navi-icon"><i class="la la-print"></i></span>
+                            <span class="navi-text">چاپ</span>
+                        </a>
+                    </li>
+                    <li class="navi-item">
+                        <a href="../../../index.html#" class="navi-link">
+                            <span class="navi-icon"><i class="la la-copy"></i></span>
+                            <span class="navi-text">کپی</span>
+                        </a>
+                    </li>
+                    <li class="navi-item">
+                        <a href="../../../index.html#" class="navi-link">
+                            <span class="navi-icon"><i class="la la-file-excel-o"></i></span>
+                            <span class="navi-text">اکسل</span>
+                        </a>
+                    </li>
+
+                    <li class="navi-item">
+                        <a href="../../../index.html#" class="navi-link">
+                            <span class="navi-icon"><i class="la la-file-pdf-o"></i></span>
+                            <span class="navi-text">PDF</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>*@-->
+            <!--end::دراپ دان Menu-->
+            <!--</div>-->
+            <!--end::دراپ دان-->
+            <!--begin::دکمه-->
+            @if (Model.IsCreateable)
+            {
+
+            }
+
+            <!--end::دکمه-->
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: جستجو Form-->
+        @if (Model.Columns.Any(x => x.IsFilterable || x.IsNested))
+        {
+            <form class="kt-form kt-form--fit mb-15">
+                <div class="row mb-6">
+
+                    @foreach (var s in Model.Columns)
+                    {
+                        if (s.IsNested)
+                        {
+                            foreach (var sn in s.Columns.Where(x => x.IsFilterable))
+                            {
+                                if (sn.FilterType == ModShop.RazorPages.Pages._Adminstrator.ViewComponents.ColumnFilterType.Interval)
+                                {
+                                    <div class="col-lg-3 mb-lg-0 mb-6">
+                                        <label>@sn.Title :</label>
+                                        <div class="input-group">
+                                            <input placeholder="از" data-filter-expression="@(string.Concat(sn.Name, ">=", "\"{value}\""))" name="@sn.Name" class="form-control datatable-input persian-date" data-col-index="@s.Columns.IndexOf(sn)" data-data-type="@(@sn.DataType.ToString().ToLower())" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
+                                            </div>
+                                            <input data-filter-expression="@(string.Concat(sn.Name, "<=", "\"{value}\""))" name="@sn.Name" class="form-control datatable-input persian-date" placeholder="تا" data-col-index="@s.Columns.IndexOf(sn)" data-data-type="@(@sn.DataType.ToString().ToLower())" />
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (sn.FilterType == ModShop.RazorPages.Pages._Adminstrator.ViewComponents.ColumnFilterType.Equality ||
+                                sn.FilterType == ModShop.RazorPages.Pages._Adminstrator.ViewComponents.ColumnFilterType.Containing ||
+                                sn.FilterType == ColumnFilterType.NullableEquality)
+                                {
+                                    if (sn.DataType == ColumnDataType.Text)
+                                    {
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>@sn.Title</label>
+                                            <input data-filter-expression="@(sn.Name)@sn.FilterType.GetDisplayName()" type="@(sn.DataType.ToString().ToLower())" class="form-control datatable-input" name="@sn.Name" data-col-index="@sn.Columns.IndexOf(s)" />
+                                        </div>
+                                    }
+                                    else if (sn.DataType == ColumnDataType.Select)
+                                    {
+                                        <div class="col-lg-3 mb-lg-0 mb-6">
+                                            <label>@sn.Title</label>
+                                            @(await Component.InvokeAsync<ModShop.RazorPages.Pages._Adminstrator.ViewComponents.Select2.Select2ViewComponent>
+        (new Select2Dto { Attributes = new Dictionary<string, string>() { { "data-filter-expression", $"{sn.Name}{sn.FilterType.GetDisplayName()}" } }, AjaxUrl = sn.FilterSearchUrl, Id = sn.Name.Replace('.', '_'), Name = sn.Name, Class = "datatable-input" }))
+                                        </div>
+
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                            if (!s.IsFilterable)
+                                continue;
+
+                            if (s.FilterType == ModShop.RazorPages.Pages._Adminstrator.ViewComponents.ColumnFilterType.Interval)
+                            {
+                                <div class="col-lg-3 mb-lg-0 mb-6">
+                                    <label>@s.Title :</label>
+                                    <div class="input-group">
+                                        <input placeholder="از" data-filter-expression="@(string.Concat(s.Name, ">=", "\"{value}\""))" name="@s.Name" class="form-control datatable-input persian-date" data-col-index="@Model.Columns.IndexOf(s)" data-data-type="@(@s.DataType.ToString().ToLower())" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
+                                        </div>
+                                        <input data-filter-expression="@(string.Concat(s.Name, "<=", "\"{value}\""))" name="@s.Name" class="form-control datatable-input persian-date" placeholder="تا" data-col-index="@Model.Columns.IndexOf(s)" data-data-type="@(@s.DataType.ToString().ToLower())" />
+                                    </div>
+                                </div>
+
+                            }
+                            else if (s.FilterType == ModShop.RazorPages.Pages._Adminstrator.ViewComponents.ColumnFilterType.Equality ||
+                            s.FilterType == ModShop.RazorPages.Pages._Adminstrator.ViewComponents.ColumnFilterType.Containing ||
+                            s.FilterType == ColumnFilterType.NullableEquality)
+                            {
+                                if (s.DataType == ColumnDataType.Text)
+                                {
+                                    <div class="col-lg-3 mb-lg-0 mb-6">
+                                        <label>@s.Title</label>
+                                        <input data-filter-expression="@(s.Name)@s.FilterType.GetDisplayName()" type="@(s.DataType.ToString().ToLower())" class="form-control datatable-input" name="@s.Name" data-col-index="@Model.Columns.IndexOf(s)" />
+                                    </div>
+                                }
+                                else if (s.DataType == ColumnDataType.Select)
+                                {
+                                    <div class="col-lg-3 mb-lg-0 mb-6">
+                                        <label>@s.Title</label>
+                                        @(await Component.InvokeAsync<ModShop.RazorPages.Pages._Adminstrator.ViewComponents.Select2.Select2ViewComponent>
+        (new Select2Dto { Attributes = new Dictionary<string, string>() { { "data-filter-expression", $"{s.Name}{s.FilterType.GetDisplayName()}" } }, AjaxUrl = s.FilterSearchUrl, Id = s.Name.Replace('.', '_'), Name = s.Name, Class = "datatable-input" }))
+                                    </div>
+
+                                }
+                            }
+                        }
+
+                    }
+                </div>
+
+                <div class="row mt-8">
+                    <div class="col-lg-12">
+                        <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>جستجو</span>
+                            </span>
+                        </button>
+                        &nbsp;&nbsp;
+                        <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                            <span>
+                                <i class="la la-close"></i>
+                                <span>ریست</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        }
+
+        <!--begin: جدول داده ها-->
+        <!--begin: جدول داده ها-->
+        <table class="table table-bordered table-hover table-checkable" id="@Model.TableId">
+            <thead>
+                <tr>
+                    @foreach (var col in Model.Columns)
+                    {
+                        if (col.IsNested)
+                        {
+                            foreach (var ncol in col.Columns)
+                            {
+
+                                <th>@(ncol.Title ?? ncol.Name)</th>
+                            }
+                        }
+                        else
+                        {
+                            if (col.IsHidden && col.Name.ToLower() != Model.KeyName.ToLower())
+                            {
+                                continue;
+                            }
+                            <th>@(col.Title ?? col.Name)</th>
+                        }
+
+                    }
+                    @if (Model.IsDeletable || Model.IsEditable || Model.HasExcelReport || Model.IsViewable)
+                    {
+                        <th>عملیات</th>
+                    }
+                </tr>
+            </thead>
+        </table>
+        <!--end: جدول داده ها-->
+    </div>
+</div>
+<!--end::Card-->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.colVis.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var model = @Html.Raw(Json.Serialize(Model));
+        var columnArray = model.columns;
+
+
+        var columnsDefinition = [];
+        for (let i = 0; i < columnArray.length; i++) {
+            if (columnArray[i].isHidden && columnArray[i].name.toLowerCase() != model.keyName.toLowerCase() && !columnArray[i].isNested)
+                continue;
+
+            if (columnArray[i].isNested) {
+                var nestedCols = columnArray[i].columns;
+                for (let j = 0; j < nestedCols.length; j++) {
+                        var obj = {
+                            data: nestedCols[j].name,
+                            name: nestedCols[j].name,
+                            visible: !nestedCols[j].isHidden,
+                            orderable: nestedCols[j].isSortable,
+                        };
+
+                        if (nestedCols[j].render) {
+                            obj.render = function (data, type, full, meta) {
+                                return nestedCols[j].render.replace('{data}', data);
+                            };
+                         }
+
+                    if (nestedCols[j].dataType == @((int)ColumnDataType.Date)) {
+
+                        obj.render = function (data, type, full, meta) {
+                            console.log(data);
+                            return new Date(data).toLocaleDateString('fa-IR');
+
+                        };
+                    }
+
+                    columnsDefinition.push(obj);
+                }
+            } else {
+                var obj = {
+                data: columnArray[i].name,
+                name: columnArray[i].name,
+                visible: !columnArray[i].isHidden,
+                orderable: columnArray[i].isSortable,
+                };
+
+                if (columnArray[i].render) {
+                    obj.render = function (data, type, full, meta) {
+                        var d = columnArray[i].render.replace('{data}', data);
+                        var fn = window[d];
+                        if (typeof (fn) == 'function') {
+                            return fn(data);
+                        }
+                        return d;
+                    };
+                }
+
+                if (columnArray[i].dataType == @((int)ColumnDataType.Date)) {
+                    obj.render = function (data, type, full, meta) {
+                        return new Date(data).toLocaleDateString('fa-IR');
+                    };
+                }
+
+                columnsDefinition.push(obj);
+            }
+
+        }
+
+        if (model.isEditable || model.isDeletable || model.isViewable) {
+            columnsDefinition.push({
+                data: model.keyName.toLowerCase(),
+                responsivePriority: -1,
+                orderable: false,
+                render: function (data, type, full, meta) {
+                        var temp = '';
+                    if (model.isEditable) {
+
+                        temp += '<a href="@(Model.EditUrl)/{data}" class="btn btn-sm btn-clean btn-icon" title="Edit details"><i class="la la-edit"></i></a>'.replace('{data}', data);
+
+                    }
+
+                    if (model.isViewable) {
+                        temp += '<a href="@(Model.ViewUrl)/{data}" class="btn btn-sm btn-clean btn-icon" title="View details"><i class="la la-eye"></i></a>'.replace('{data}', data);
+                    }
+
+                    if (model.isDeletable) {
+
+                        temp += '<a data-key="{data}" class="btn btn-sm btn-clean btn-icon btn-del" title="Delete"><i class="la la-trash"></i></a>'.replace('{data}', data);
+
+                    }
+
+
+                    return temp;
+
+
+                },
+            });
+        }
+
+        var buttons = [
+            {
+                extend: 'print',
+                title: '',
+                text: 'چاپ',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                customize: function (win) {
+                    $(win.document.body)
+                        .css('font-size', '10pt')
+                        ;
+
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
+                }
+            },
+            {
+                extend: 'colvis',
+                text: 'انتخاب ستون'
+            }
+        ];
+        if (model.isCreateable) {
+            buttons.push({
+                text: 'رکورد جدید',
+                action: function (e, dt, node, config) {
+                    window.location = '@Model.CreateUrl';
+                }
+            });
+        }
+        var table = $('#@Model.TableId').DataTable({
+            responsive: true,
+            // Pagination settings
+   //         dom: `<'row'<'col-sm-12'tr>>
+			//<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+            // read more: https://datatables.net/examples/basic_init/dom.html
+
+            pagingType: "full_numbers",
+            paging: true,
+            lengthMenu: [10, 25, 50, 75, 100],
+
+            language: {
+                'lengthMenu': 'تعداد _MENU_',
+                'sSearch': 'جستجو'
+            },
+
+            dom: 'Bfrtip',
+            buttons: buttons,
+            bFilter: false,
+
+            searchDelay: 500,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '@(Model.HasDefaultLoadDataUrl ? "?handler=LoadData" : Model.LoadDataUrl)',
+                type: 'POST',
+                data: function (data) {
+                    var filters = model.columns.filter(function (item) {
+                        return item.isFilterable == true ;
+                    });
+                    var nestedFilters = [];
+                    for (var i = 0; i < model.columns.length; i++) {
+                        if (model.columns[i].isNested) {
+                            $.each(model.columns[i].columns, function (index, e) {
+                                if (e.isFilterable)
+                                    nestedFilters.push(e);
+                            });
+                        }
+                    }
+
+                    filters = filters.concat(nestedFilters);
+                    if (filters && filters.length > 0) {
+                        for (var i = 0; i < filters.length; i++) {
+                            var el = $('*.datatable-input[name="' + filters[i].name + '"]');
+                            var tableEl = data.columns.filter(function (item) {
+                                return item.name.toLowerCase() == filters[i].name.toLowerCase();
+                            });
+                            if (el.val()) {
+
+                                var dataStr = null;
+                                for (var j = 0; j < el.length; j++) {
+                                    var value = $(el[j]).val();
+                                    value = fixNums(value);
+                                    if (!value)
+                                        continue;
+
+                                    var dataType = $(el[j]).data('data-type');
+                                    var filterExpression = $(el[j]).data('filter-expression');
+
+                                    if (dataType === 'date') {
+                                        var numbers = value.split('/');
+                                        var date = JalaliDate.jalaliToGregorian(numbers[0], numbers[1], numbers[2]);
+                                        value = date[0] + '-' + date[1] + '-' + date[2] + ' 00:00:00';
+
+                                    }
+                                    filterExpression = filterExpression.replace('{value}', value);
+                                    if (dataStr)
+                                        dataStr += '&&' + filterExpression;
+                                    else
+                                        dataStr = filterExpression;
+                                }
+
+                                if (data.filters) {
+                                    data.filters.push({
+                                        key: filters[i].name,
+                                        value: dataStr,
+                                        valueWithoutExpression: value
+                                    });
+                                } else {
+                                    data.filters = [];
+                                    data.filters.push({
+                                        key: filters[i].name,
+                                        value: dataStr,
+                                        valueWithoutExpression: value
+                                    });
+                                }
+                            }
+
+                        }
+                    }
+                },
+                dataSrc: function (json) {
+
+                    if (json.data)
+                        return json.data;
+                    else
+                        return [];
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+            },
+
+            columns: columnsDefinition,
+
+            columnDefs: [{
+                "defaultContent": "-",
+                "targets": "_all"
+            }],
+
+            initComplete: function () {
+
+                $('.dt-button').addClass('btn btn-primary font-weight-bolder');
+                this.api().columns().every(function () {
+                    var column = this;
+
+
+                });
+            },
+
+
+        });
+
+        $('#kt_search').on('click', function (e) {
+            e.preventDefault();
+            var params = {};
+            $('.datatable-input').each(function () {
+                var i = $(this).data('col-index');
+                var val = $(this).val();
+                val = fixNums(val);
+
+                var dataType = $(this).data('data-type');
+                if (dataType === 'date') {
+                    var numbers = val.split('/').map(function (item) {
+                        return parseInt(item, 10);
+                    });
+                    var pd = new persianDate(numbers).toCalendar('gregorian');
+                    val = pd.year() + '-' + pd.month() + '-' + pd.day();
+                }
+
+
+
+
+                if (params[i]) {
+                    params[i] += '|' + val;
+                }
+                else {
+                    params[i] = val;
+                }
+            });
+            //$.each(params, function (i, val) {
+            //    // apply search params to datatable
+            //    table.column(i).search(val ? val : '', false, false);
+            //});
+            table.table().draw();
+        });
+
+        $('.persian-date').persianDatepicker({
+            format: 'YYYY/MM/DD',
+            altFormat: 'YYYY/MM/DD',
+        });
+
+        $('.persian-date').val('');
+
+
+        $(document).on('click', '#@Model.TableId .btn-del', function () {
+
+            var key = $(this).data('key');
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary'
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: 'آیا مطمئنید؟',
+                text: "در صورت حذف،  قابل بازیابی نخواهد بود!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'بله',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+            url: '@Model.DeleteUrl',
+                        method: "POST",
+                        data: { id: key },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+                        success: function () {
+
+                            table.table().draw();
+
+                            swalWithBootstrapButtons.fire(
+
+                                'حذف شد!',
+
+                                'رکورد مورد نظر حذف شد',
+
+                                'success'
+
+                            );
+
+                        }
+
+                    });
+                }
+            })
+        });
+
+        $('#@Model.TableId tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            var eventName = '@Model.TableId' + '-row-click';
+            console.log(eventName);
+            var event = new CustomEvent(eventName,  { "detail": data });
+
+            document.dispatchEvent(event);
+        });
+
+        function fixNums(str) {
+            var persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+            var arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+
+            if (typeof str === 'string') {
+                for (var i = 0; i < 10; i++) {
+                    str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
+                }
+            }
+            return str;
+
+        }
+
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+
+        document.addEventListener('keydown', function(event) {
+              if (event.ctrlKey && event.key === 'p') {
+
+              }
+        });
+
+        JalaliDate = {
+            g_days_in_month: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+            j_days_in_month: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
+        };
+
+        JalaliDate.jalaliToGregorian = function (j_y, j_m, j_d) {
+            j_y = parseInt(j_y);
+            j_m = parseInt(j_m);
+            j_d = parseInt(j_d);
+            var jy = j_y - 979;
+            var jm = j_m - 1;
+            var jd = j_d - 1;
+
+            var j_day_no = 365 * jy + parseInt(jy / 33) * 8 + parseInt((jy % 33 + 3) / 4);
+            for (var i = 0; i < jm; ++i) j_day_no += JalaliDate.j_days_in_month[i];
+
+            j_day_no += jd;
+
+            var g_day_no = j_day_no + 79;
+
+            var gy = 1600 + 400 * parseInt(g_day_no / 146097); /* 146097 = 365*400 + 400/4 - 400/100 + 400/400 */
+            g_day_no = g_day_no % 146097;
+
+            var leap = true;
+            if (g_day_no >= 36525) /* 36525 = 365*100 + 100/4 */ {
+                g_day_no--;
+                gy += 100 * parseInt(g_day_no / 36524); /* 36524 = 365*100 + 100/4 - 100/100 */
+                g_day_no = g_day_no % 36524;
+
+                if (g_day_no >= 365) g_day_no++;
+                else leap = false;
+            }
+
+            gy += 4 * parseInt(g_day_no / 1461); /* 1461 = 365*4 + 4/4 */
+            g_day_no %= 1461;
+
+            if (g_day_no >= 366) {
+                leap = false;
+
+                g_day_no--;
+                gy += parseInt(g_day_no / 365);
+                g_day_no = g_day_no % 365;
+            }
+
+            for (var i = 0; g_day_no >= JalaliDate.g_days_in_month[i] + (i == 1 && leap); i++)
+                g_day_no -= JalaliDate.g_days_in_month[i] + (i == 1 && leap);
+            var gm = i + 1;
+            var gd = g_day_no + 1;
+
+            gm = gm < 10 ? "0" + gm : gm;
+            gd = gd < 10 ? "0" + gd : gd;
+
+            return [gy, gm, gd];
+        }
+
+    });
+</script>

@@ -1,0 +1,20 @@
+﻿@page "/Adminstrator/Reports/SaleProductSeprated"
+@model ModShop.RazorPages.Pages._Adminstrator.Reports.ProductSepratedSaleReportModel
+@{
+}
+
+@Html.AntiForgeryToken()
+
+<vc:datatable dto="Model.Dto"></vc:datatable>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            document.addEventListener('@Model.Dto.TableId-row-click', function (e) {
+
+
+            });
+        });
+    </script>
+}

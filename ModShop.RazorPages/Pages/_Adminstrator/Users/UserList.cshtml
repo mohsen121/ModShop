@@ -1,0 +1,8 @@
+﻿@page "/Adminstrator/Users"
+@model ModShop.RazorPages.Pages._Adminstrator.Users.UserListModel
+@{
+}
+
+@Html.AntiForgeryToken()
+
+<vc:datatable dto="Model.Dto"></vc:datatable>

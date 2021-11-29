@@ -1,0 +1,32 @@
+﻿@model ModShop.Domain.Entities.User
+<div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
+    <div class="header-btns-icon">
+        <i class="fa fa-user-o"></i>
+    </div>
+    <strong class="text-uppercase">حساب کاربری <i class="fa fa-caret-down"></i></strong>
+</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <text>سلام <strong>@Model?.Name</strong></text>
+}
+else
+{
+    <text>
+        <a href="/Account/Login" class="text-uppercase">ورود</a> / <a href="/Account/SignUp" class="text-uppercase">ثبت نام</a>
+    </text>
+}
+<ul class="custom-menu">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li><a href="/User/Profile"><i class="fa fa-user-o"></i> حساب کاربری</a></li>
+        <li><a href="/User/Order/Checkout"><i class="fa fa-check"></i> تسویه حساب</a></li>
+        <li><a href="/Account/Logout"><i class="fa fa-sign-out"></i> خروج</a></li>
+    }
+    else
+    {
+        <li><a href="/Account/Login"><i class="fa fa-unlock-alt"></i> ورود</a></li>
+        <li><a href="/Account/SignUp"><i class="fa fa-user-plus"></i> ثبت نام</a></li>
+    }
+
+
+</ul>

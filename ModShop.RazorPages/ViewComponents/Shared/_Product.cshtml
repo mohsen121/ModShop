@@ -1,0 +1,50 @@
+﻿@model ModShop.Domain.Entities.Product
+<div class="product product-single">
+    <a href="/Product/@Model.Id">
+        <div class="product-thumb">
+            <div class="product-label">
+                @if (DateTime.Today - Model.Created.Date <= TimeSpan.FromDays(7))
+                {
+                    <span>جدید</span>
+                }
+                @if (Model.Discount > 0)
+                {
+                    <span class="sale">@Math.Floor((Model.Discount) / Model.Price * 100)%-</span>
+                }
+
+            </div>
+            @*<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> مشاهده سریع</button>*@
+            <img src="@Model.Image" alt="">
+        </div>
+    </a>
+    <div class="product-body">
+        @if (Model.Discount > 0)
+        {
+
+            <h3 class="product-price">@(Model.Price - Model.Discount) تومان <del class="product-old-price">@Model.Price تومان</del></h3>
+        }
+        else
+        {
+            <h3 class="product-price">@Model.Price تومان</h3>
+        }
+
+        <div class="product-rating">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star-o empty"></i>
+        </div>
+
+        <h2 class="product-name"><a href="/Product/@Model.Id">@Model.Title</a></h2>
+        <div class="product-btns">
+            @*<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+                <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>*@
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button class="primary-btn add-to-cart btnAddCart" data-productid="@Model.Id"><i class="fa fa-shopping-cart"></i> افزودن به سبد</button>
+
+            }
+        </div>
+    </div>
+</div>

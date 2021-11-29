@@ -1,0 +1,12 @@
+﻿@model ModShop.RazorPages.ViewComponents.Shared.SearchComponentVm
+<form method="get" action="/Search">
+    <input class="input search-input" name="SearchFilters.Query" type="text" placeholder="جستجو">
+    <select class="input search-categories" name="SearchFilters.CategoryIds">
+        <option>همه دسته ها</option>
+        @foreach (var c in Model.Items)
+        {
+            <option value="@c.Id">@c.Title</option>
+        }
+    </select>
+    <button class="search-btn"><i class="fa fa-search"></i></button>
+</form>

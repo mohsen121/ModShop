@@ -1,0 +1,38 @@
+﻿@model ModShop.RazorPages.ViewComponents.Shared.CartVm
+<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+    <div class="header-btns-icon">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="qty">@(Model?.BadgeCount ?? 0)</span>
+    </div>
+    <strong class="text-uppercase">سبدخرید:</strong>
+    <span class="heder-cart-price">@(Model?.TotalPrice ?? 0) تومان</span>
+</a>
+<div class="custom-menu">
+    <div id="shopping-cart">
+        <div class="shopping-cart-list">
+            @if (Model?.Products != null && Model.Products.Any())
+            {
+                @foreach (var p in Model.Products)
+                {
+                    <div class="product product-widget">
+                        <div class="product-thumb">
+                            <img src="@p.Product.Image" alt="">
+                        </div>
+                        <div class="product-body">
+                            <h3 class="product-price">@p.Price تومان <span class="qty">@p.Quantity عدد</span></h3>
+                            <h2 class="product-name"><a href="#">@p.Product.Title</a></h2>
+                        </div>
+                        <button class="cancel-btn removeFromCart" data-productid="@p.ProductId"><i class="fa fa-trash"></i></button>
+                    </div>
+                }
+            }
+
+        </div>
+        <div class="shopping-cart-btns">
+            @if (Model?.Products != null && Model.Products.Any())
+            {
+                <a href="/User/Order/Checkout" class="primary-btn">مرحله بعد <i class="fa fa-arrow-circle-left"></i></a>
+            }
+        </div>
+    </div>
+</div>
